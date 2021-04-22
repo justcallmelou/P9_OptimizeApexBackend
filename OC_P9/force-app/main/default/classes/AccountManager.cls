@@ -2,7 +2,7 @@
  * @description       : 
  * @author            : ChangeMeIn@UserSettingsUnder.SFDoc
  * @group             : 
- * @last modified on  : 04-20-2021
+ * @last modified on  : 04-22-2021
  * @last modified by  : ChangeMeIn@UserSettingsUnder.SFDoc
  * Modifications Log 
  * Ver   Date         Author                               Modification
@@ -10,16 +10,18 @@
 **/
 public with sharing class AccountManager {
     
-    public static Map<Id, Account> calulationAccountCA(Map<Id, Account> mAccts) {
+    public static void calulationAccountCA(Set<Id> sAccId) {
         
-        for(Account acc : mAccts.values()){
+        Map<Id, Account> mAccs = new Map<Id, Account>([SELECT Id, Chiffre_d_affaire__c, (SELECT Id, TotalAmount FROM Orders WHERE Status = 'Ordered') FROM Account WHERE id in: sAccID]);
+        
+        for(Account acc : mAccs.values()){
             Decimal ta = 0;
             for(Order o : acc.Orders){
                 ta += o.totalAmount;
             } 
             acc.Chiffre_d_affaire__c = ta;
-            mAccts.put(acc.Id, acc);
-        }     
-        return mAccts;
+            mAccs.put(acc.Id, acc);
+        }    
+        update mAccs.values();
     }    
 }

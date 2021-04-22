@@ -2,7 +2,7 @@
  * @description       : 
  * @author            : ChangeMeIn@UserSettingsUnder.SFDoc
  * @group             : 
- * @last modified on  : 04-16-2021
+ * @last modified on  : 04-22-2021
  * @last modified by  : ChangeMeIn@UserSettingsUnder.SFDoc
  * Modifications Log 
  * Ver   Date         Author                               Modification
@@ -13,27 +13,22 @@ global class Batch01_UpdateAccountCA implements Database.Batchable<sObject>{
     global Database.QueryLocator start(Database.BatchableContext info){ 
         //Requeter seulement les comptes qui ont au moins une commande avec le Status 'Ordered'
         return Database.getQueryLocator(
-            [SELECT Name, Id, (SELECT Id, TotalAmount, Status FROM Orders WHERE Status = 'Ordered') FROM Account WHERE Id IN (SELECT AccountId FROM Order WHERE Status= 'Ordered')]
+            [SELECT Id FROM Account WHERE Id IN (SELECT AccountId FROM Order WHERE Status = 'Ordered')]
 
         );
     }
     
     global void execute(Database.BatchableContext info, List<Account> scope){   
-        List<Account> lAccToUpdate = new List<Account>();
+        Set<Id> sAccountIdToUpdate = new Set<Id>();
         
         for(Account acc : scope){
-            acc.Chiffre_d_affaire__c = 0;
-            for(Order o : acc.Orders){
-                acc.Chiffre_d_affaire__c += o.TotalAmount;
-            }
-            lAccToUpdate.add(acc);
+           sAccountIdToUpdate.add(acc.Id);
         }
-        update lAccToUpdate;
         
+        AccountManager.calulationAccountCA(sAccountIdToUpdate);
     }    
     
     global void finish(Database.BatchableContext info){     
         
     } 
 }
-
