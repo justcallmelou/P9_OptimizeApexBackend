@@ -8,7 +8,7 @@
  * Ver   Date         Author                               Modification
  * 1.0   04-16-2021   ChangeMeIn@UserSettingsUnder.SFDoc   Initial Version
 **/
-public with sharing class VFC_AggregateResultController {
+public with sharing class VFC_AggregateResult {
 
     public List<AggregateResult> aggregateResultList {get;set;}
     
