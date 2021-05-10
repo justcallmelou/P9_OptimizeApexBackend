@@ -15,7 +15,6 @@ trigger OrderTrigger on Order (after insert ,after update) {
     for (Order o: Trigger.new) { 
         if(o.Status == 'Ordered' && o.Status != Trigger.oldMap.get(o.Id).Status){
 			sAccID.add (o.AccountId); 
-            System.debug(sAccID);
         }
     } 
     
